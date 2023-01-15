@@ -1,0 +1,8 @@
+{% extends 'root.html' %} {% block title %}Panel rejestracji{% endblock %}
+{% load crispy_forms_tags %} {% block content %}
+<form method="post">
+    {% csrf_token %}{{form|crispy}}
+    <p>Posiadsz konto? <a href="{% url 'login' %}">Logowanie</a>!</p>
+    <button type="submit" class="btn btn-success">Zarejestruj</button>
+</form>
+{% endblock %}

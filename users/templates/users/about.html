@@ -1,0 +1,18 @@
+{% extends 'index.html' %}
+{% block content %}
+    <table border="1">
+        <h1>Dane osobowe użytkownika</h1>
+        <tr>
+            <td><strong>Imie</strong></td>
+            <td>{{user.first_name}}</td>
+        </tr>
+        <tr>
+            <td><strong>Nazwisko</strong></td>
+            <td>{{user.last_name}}</td>
+        </tr>
+        <tr>
+            <td><strong>Email</strong></td>
+            <td>{{user.email}}</td>
+        </tr>
+    </table>
+{% endblock %}

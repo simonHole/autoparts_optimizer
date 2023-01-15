@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+{% block content %}
+    <table>  
+    {% for car in cars %}
+        <tr>
+            <td><a href="{% url 'index' %}">{{car}}</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+{% endblock %}
