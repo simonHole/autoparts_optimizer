@@ -1,0 +1,10 @@
+{% extends 'index.html' %}
+{% block content %}
+<table>
+    {% for engine in engines %}
+    <tr>
+        <td><a class="list-position" href="{% url 'show_parts' engine.id %}">{{engine}}</a></td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}

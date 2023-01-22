@@ -1,0 +1,43 @@
+{% extends 'index.html' %}
+{% block content %}
+<style>
+
+    table {
+        border: 1px solid #202020;
+    }
+    
+    tr {
+        border: 1px solid #202020;
+    }
+    td {
+        border: 1px solid #202020;
+        text-align: center;
+    }
+
+</style>
+
+<h5>{{part}}</h5>
+
+<table>
+    <tr>
+        <table>
+            <tr>
+                <td>Producent</td>
+                <td>Numer katalogowy</td>
+                <td>OEM</td>
+            </tr>
+            <tr>
+                <td>{{part.vendor.name}}</td>
+                <td>{{part.catalog_number}}</td>
+                <td>
+                {% if part.original_id == None %}
+                    --
+                {% else %}
+                    {{part.original_id.vendor}} {{part.original_id.catalog_number}}
+                {% endif %}
+                </td>
+            </tr>
+        </table>
+    </tr>
+</table>
+{% endblock %}

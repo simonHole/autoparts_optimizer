@@ -1,3 +1,10 @@
-{% extends 'index.html' %} {% block content %}
-<p>Części - pełny katalog</p>
+{% extends 'index.html' %}
+{% block content %}
+<table>
+    {% for part in parts %}
+    <tr>
+        <td><a class="list-position" href="{% url 'show_part' part.id  %}">{{part}}</a></td>
+    </tr>
+    {% endfor %}
+</table>
 {% endblock %}

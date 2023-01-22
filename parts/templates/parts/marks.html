@@ -3,7 +3,7 @@
     <table>  
     {% for car in cars %}
         <tr>
-            <td><a href="{% url 'index' %}">{{car}}</a></td>
+            <td><a class="list-position" href="{% url 'show_models' car %}">{{car}}</a></td>
         </tr>
     {% endfor %}
     </table>

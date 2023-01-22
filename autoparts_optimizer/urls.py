@@ -1,7 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.shortcuts import render, redirect
-from parts import views
 
 
 def index(request):
@@ -13,9 +12,8 @@ def index(request):
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('users.urls')),
-    path('parts/', include('parts.urls')),
+    path('', index, name='index'),
 
-    path('cars/', views.show_marks, name='show_marks'),
-    path('', index, name='index')
+    path('', include('users.urls')),
+    path('', include('parts.urls')),
 ]
