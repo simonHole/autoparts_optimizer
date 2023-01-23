@@ -45,10 +45,31 @@ def show_parts(request, engine):
 
 
 def show_part(request, part):
-    part = Part.objects.get(id=part)
+    select_part = Part.objects.get(id=part)
 
-    context = {
-        'part': part
-    }
+    # When product is original
+    if select_part.is_original:
+        substitutes = Part.objects.filter(original_id=part)
+
+        # Context for original product article
+        context = {
+            'select_part': select_part,
+            'substitutes': substitutes
+        }
+
+    else:
+        original_identify = select_part.original_id
+        substitutes = Part.objects.filter(
+            original_id=original_identify.id).exclude(id=part)
+
+        all = substitutes.union(Part.objects.filter(
+            id=substitutes[0].original_id.id))
+
+        context = {
+            'select_part': select_part,
+            'original_identify': original_identify
+        }
+
+    # Context for
 
     return render(request, 'parts/part.html', context)

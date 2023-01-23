@@ -71,7 +71,7 @@ class Part(models.Model):
     name = models.CharField(max_length=255, null=True, blank=False)
     description = models.TextField(max_length=5000, null=True, blank=True)
     quality_fac = models.FloatField(null=False, blank=False, validators=[
-                                    MinValueValidator(0.1), MaxValueValidator(1)])
+                                    MinValueValidator(1), MaxValueValidator(100)])
     price = models.FloatField(default=0, null=True, blank=False)
     time_of_delivery = models.IntegerField(null=False, blank=False, validators=[
                                            MinValueValidator(1), MaxValueValidator(60)])
@@ -85,6 +85,20 @@ class Part(models.Model):
             return f'{self.name}'
         return self.name
 
+    # All 4 functions to get the best quality, the cheapest price, the fastest delivery and weighted average of all coefficients
+    def lowest_price(parts):
+
+        lowest_price_part = parts[0]
+        for part in parts:
+            if part.price < lowest_price_part:
+                lowest_price_part = part.price
+
+        return lowest_price_part
+
+    def part_sum(self, quality, price, time):
+        return round((quality * self.quality_fac) - (price * self.price) - (time * self.time_of_delivery), 2)
+
+    # Correction after save new product
     def save(self, *args, **kwargs):
 
         # Price of any part in shop cannot be equal 0

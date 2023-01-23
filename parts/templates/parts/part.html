@@ -20,24 +20,48 @@
 
 <table>
     <tr>
+        <h5>Zaznacz które rzeczy cię najbardziej intersują aby obliczyć najkorzystniejsza ofertę</h5>
+        <form method="post">
+            <label for="time">Czas</label>
+            <br>
+            <input type="range" min="1" max="100" value="50" id="time">
+            <br>
+            <label for="quality">Jakość</label>
+            <br>
+            <input type="range" min="1" max="100" value="50" id="quality">
+            <br>
+            <input type="submit" value="Wyznacz">
+        </form>
+        <br><br>
+
+
+        <h5>O produkcie</h5>
+
         <table>
             <tr>
                 <td>Producent</td>
                 <td>Numer katalogowy</td>
                 <td>OEM</td>
+                <td>Współczynnik ogólny</td>
             </tr>
             <tr>
-                <td>{{part.vendor.name}}</td>
-                <td>{{part.catalog_number}}</td>
+                <td>{{select_part.vendor.name}}</td>
+                <td>{{select_part.catalog_number}}</td>
                 <td>
-                {% if part.original_id == None %}
+                {% if select_part.original_id == None %}
                     --
                 {% else %}
-                    {{part.original_id.vendor}} {{part.original_id.catalog_number}}
+                    {{select_part.original_id.vendor}} {{select_part.original_id.catalog_number}} 
                 {% endif %}
                 </td>
             </tr>
         </table>
+        <br>
+        <h3>Zamienniki</h3>
+        {% for part in substitutes %}
+            <p><a href="{% url 'show_part' part.id %}">{{part}}</a> {{part.part_sum}}</p>
+        {% endfor %}
+
     </tr>
 </table>
-{% endblock %}
+{% endblock %}`
