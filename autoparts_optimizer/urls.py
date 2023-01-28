@@ -4,9 +4,6 @@ from django.shortcuts import render, redirect
 
 
 def index(request):
-    if request.user.is_superuser:
-        return redirect('admin/')
-
     return render(request, 'index.html')
 
 
@@ -16,4 +13,5 @@ urlpatterns = [
 
     path('', include('users.urls')),
     path('', include('parts.urls')),
+    path('orders', include('orders.urls')),
 ]

@@ -1,11 +1,15 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .forms import LoginForm, RegistrationForm
 from django.contrib.auth import logout
 
 
 def user_login(request):
+    if request.user.is_authenticated:
+        return redirect('index')
+
     if request.method == 'POST':
         form = LoginForm(request.POST)
         if form.is_valid():
@@ -43,6 +47,7 @@ def user_register(request):
     return render(request, 'users/register.html', {'form': form})
 
 
+@login_required(login_url='login')
 def user_logout(request):
     logout(request)
     return redirect('index')

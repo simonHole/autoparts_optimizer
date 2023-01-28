@@ -1,10 +1,104 @@
 {% extends 'index.html' %}
+{% load static %}
 {% block content %}
+
+<div class="container md-5">
+    <h1 class="text-center font-weight-normal"></h1>
+</div>
+
+{% if parts.count > 0 %}
+<section style="background-color: #eee;">
+    <div class="container py-5">
+        {% for part in parts%}
+        <div class="row justify-content-center mb-3">
+            <div class="col-md-12 col-xl-10">
+                <div class="card shadow-0 border rounded-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
+                                <div class="bg-image hover-zoom ripple rounded ripple-surface">
+                                    <img src="{% static 'images/product.png' %}"
+                                        class="w-100" />
+                                    <a href="#!">
+                                        <div class="hover-overlay">
+                                            <div class="mask" style="background-color: rgba(253, 253, 253, 0.15);">
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-lg-6 col-xl-6">
+                                <h5>{{part.name}}</h5>
+                                <div class="d-flex flex-row">
+                                    <div class="text-danger mb-1 me-2">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                    <span>{{part.vendor.name}}</span>
+                                </div>
+                                <div class="mt-1 mb-0 text-muted small">
+                                    <span>100% cotton</span>
+                                    <span class="text-primary"> • </span>
+                                    <span>Light weight</span>
+                                    <span class="text-primary"> • </span>
+                                    <span>Best finish<br /></span>
+                                </div>
+                                <div class="mb-2 text-muted small">
+                                    <span>Unique design</span>
+                                    <span class="text-primary"> • </span>
+                                    <span>For men</span>
+                                    <span class="text-primary"> • </span>
+                                    <span>Casual<br /></span>
+                                </div>
+                                <p class="text-truncate mb-4 mb-md-0">
+                                    {{part.engine_id}}
+                                </p>
+                            </div>
+                            <div class="col-md-6 col-lg-3 col-xl-3 border-sm-start-none border-start">
+                                <div class="d-flex flex-row align-items-center mb-1">
+                                    <h4 class="mb-1 me-1">{{part.price}} PLN</h4>
+                                    
+                                </div>
+                                <h6 class="text">Czas dostawy: 
+                                    {{part.time_of_delivery}} 
+                                    {% if part.time_of_delivery == 1 %}
+                                    dzień
+                                    {% else %}
+                                    dni
+                                    {% endif %}
+                                </h6>
+                                <div class="d-flex flex-column mt-4">
+                                    <a class="btn btn-primary btn-sm" href="{% url 'show_part' part.id %}">
+                                        Szczegóły
+                                    </a>
+                                    <a href="{% url 'add_to_cart' part.id %}" class="btn btn-outline-primary btn-sm mt-2">
+                                        Dodaj do koszyka
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% else %}
+<h2 class="text-error text-center">Brak dostępnych części</h2>
+<p class="text-error text-center">Części do tego silnka nie są dostępne w systemie. Wybierz inny silnik.</p>
+{% endif %}
+
+
+
+
 <table>
-    {% for part in parts %}
+    
     <tr>
-        <td><a class="list-position" href="{% url 'show_part' part.id  %}">{{part}}</a></td>
+        <td><a class="list-position" href="#">{{part}}</a></td>
     </tr>
-    {% endfor %}
 </table>
 {% endblock %}
+

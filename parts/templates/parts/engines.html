@@ -1,10 +1,32 @@
 {% extends 'index.html' %}
 {% block content %}
-<table>
-    {% for engine in engines %}
-    <tr>
-        <td><a class="list-position" href="{% url 'show_parts' engine.id %}">{{engine}}</a></td>
-    </tr>
-    {% endfor %}
-</table>
+
+{% if engines.count > 0 %}
+<section id="cars" class="bg-light">
+    <div class="container-lg">
+        <div class="text-center">
+            <h3>Dostępne silinki</h3>
+            <p>Wybierz silnik z modelu który jest dostępny</p>
+        </div>
+    </div>
+</section>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="list-group">
+            {% for engine in engines %}
+            <div class="list-group-item py-3 text-center">
+                <a class="list-position" href="{% url 'show_parts' engine.id %}">
+                    <h5 class="mb-2"></h5>{{engine}}</h5>
+                </a></td>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% else %}
+<h2 class="text-error text-center">Brak dostępnych silników</h2>
+<p class="text-error text-center">Wybrany przez model samochodu nie posiada listy silników w naszym systemie. Wybierz inny silnik</p>
+{% endif %}
+
 {% endblock %}

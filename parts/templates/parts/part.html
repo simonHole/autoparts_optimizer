@@ -64,4 +64,13 @@
 
     </tr>
 </table>
-{% endblock %}`
+
+<script>
+    'use strict';
+    const timeBar = document.querySelector('#time');
+    const qualityBar = document.querySelector('#quality');
+
+    timeBar.value = 100 - qualityBar.value;
+</script>
+
+{% endblock %}

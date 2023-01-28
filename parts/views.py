@@ -60,10 +60,7 @@ def show_part(request, part):
     else:
         original_identify = select_part.original_id
         substitutes = Part.objects.filter(
-            original_id=original_identify.id).exclude(id=part)
-
-        all = substitutes.union(Part.objects.filter(
-            id=substitutes[0].original_id.id))
+            original_id=original_identify.id).exclude(id=select_part.id)
 
         context = {
             'select_part': select_part,

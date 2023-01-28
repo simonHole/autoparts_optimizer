@@ -96,7 +96,7 @@ class Part(models.Model):
         return lowest_price_part
 
     def part_sum(self, quality, price, time):
-        return round((quality * self.quality_fac) - (price * self.price) - (time * self.time_of_delivery), 2)
+        return round((0.5 * self.quality_fac) - (0.35 * self.price) - (0.15 * self.time_of_delivery), 2)
 
     # Correction after save new product
     def save(self, *args, **kwargs):

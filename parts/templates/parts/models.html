@@ -1,10 +1,32 @@
 {% extends 'index.html' %}
 {% block content %}
-<table>
-    {% for mark in mark_cars %}
-    <tr>
-        <td><a class="list-position" href="{% url 'show_engines' mark.id  %}">{{mark}}</a></td>
-    </tr>
-    {% endfor %}
-</table>
+<section id="cars" class="bg-light">
+    <div class="container-lg">
+        <div class="text-center">
+            <h3>Dostępne modele</h3>
+            <p>Wybierz model samochodu do którego chcesz zakupić część</p>
+        </div>
+    </div>
+</section>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="list-group">
+            {% for mark in mark_cars %}
+            <a class="list-position text-center" href="{% url 'show_engines' mark.id  %}">
+                <div class="list-group-item py-3">
+                    <h5 class="mb-2"></h5>{{mark}}</h5>             
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
+
+
+
+
+<tr>
+    <td><a class="list-position" href="{% url 'show_engines' mark.id  %}">{{mark}}</a></td>
+</tr>

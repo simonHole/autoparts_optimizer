@@ -1,10 +1,25 @@
 {% extends 'index.html' %}
 {% block content %}
-    <table>  
-    {% for car in cars %}
-        <tr>
-            <td><a class="list-position" href="{% url 'show_models' car %}">{{car}}</a></td>
-        </tr>
-    {% endfor %}
-    </table>
+    <section id="cars" class="bg-light">
+        <div class="container-lg">
+            <div class="text-center">
+                <h3>Dostępne marki</h3>
+                <p>Wybierz markę samochodu której zakupem części jesteś zainteresowany</p>
+            </div>
+        </div>  
+    </section>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="list-group">
+                {% for car in cars %}
+                <div class="list-group-item py-3 text-center">
+                    <a class="list-position" href="{% url 'show_models' car %}">
+                        <h5 class="mb-2"></h5>{{car}}</h5>
+                    </a></td>  
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div> 
 {% endblock %}
