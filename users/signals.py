@@ -9,7 +9,7 @@ def create_client(sender, instance, created, **kwargs):
         user = instance
         client = Client.objects.create(
             user=user,
-            username=user.username
+            username=user.username,
             email=user.email,
             name=user.first_name,
             surname=user.last_name
