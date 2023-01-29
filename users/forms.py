@@ -8,23 +8,19 @@ class LoginForm(forms.Form):
     password = forms.CharField(widget=forms.PasswordInput, label="Hasło")
 
 
-class RegistrationForm(UserCreationForm):
+class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-
-        fields = ['first_name', 'last_name' 'email',
+        fields = ['first_name', 'last_name', 'email',
                   'username', 'password1', 'password2']
         labels = {
-            'username': 'Nazwa użytkownika',
-            'email': 'Adres e-mail',
             'first_name': 'Imię',
             'last_name': 'Nazwisko',
-            'password1': 'Hasło',
-            'password2': 'Powtórz hasło'
+            'email': 'Adres e-mail'
         }
 
-        def __init__(self, *args, **kwargs):
-            super(RegistrationForm, self).__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
 
-            for key, value in self.fields.items():
-                value.widget.attrs.update({'class': 'input'})
+        for name, field in self.fields.items():
+            field.widget.attrs.update({'class': 'input'})

@@ -19,25 +19,33 @@
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'index' %}">Autoparts Recommender</a>
                     </li>
-                    {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'show_marks' %}">Samochody</a>
-                    </li>
-                    {% endif %}
                 </ul>
             </div>
             <div>
                 <ul class="navbar-nav">
                     {% if user.is_authenticated %}
-                    <span class="navbar-text">Witaj <a
-                            href="{% url 'user_about' %}">{{user.username}}</a> | </span>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'logout' %}">Wyloguj</a>
-                    </li>
+                        {% if user.is_superuser %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin:index' %}">Panel administratora</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'admin-management' %}">System zarządzania</a>
+                        </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'show_marks' %}">Samochody</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'cart' %}">Koszyk</a>
+                        </li>   
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Wyloguj </a>
+                        </li>
                     {% else %}
-                    <li class="nav-item">
-                        <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
-                    </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Zaloguj</a>
+                        </li>
                     {% endif %}
                 </ul>
             </div>

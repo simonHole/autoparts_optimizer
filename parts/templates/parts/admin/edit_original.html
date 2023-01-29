@@ -1,0 +1,20 @@
+{% extends 'root.html' %}
+
+{% load crispy_forms_tags %}
+{% load static %}
+
+{% block content %}
+<div class="container-lg">
+    <div class="text-center">
+        <h3>Edycja produktu: {{part.name}}</h3>
+        <p>Proszę o zaktualizowanie produktu według zgodnych parametrów.</p>
+    </div>
+</div>
+
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" class="btn btn-success" value="Zaktualizuj">
+    <a href="{% url 'admin-management' %}" class="btn btn-warning">Cofnij</a>
+</form>
+{% endblock %}

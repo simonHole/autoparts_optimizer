@@ -66,13 +66,17 @@ class Part(models.Model):
                           primary_key=True)
 
     engine_id = models.ForeignKey(Engine, on_delete=models.CASCADE)
-    vendor = models.ForeignKey(Vendor, on_delete=models.CASCADE)
+    vendor = models.ForeignKey(
+        Vendor, on_delete=models.CASCADE, null=True, blank=False)
     catalog_number = models.CharField(max_length=75, null=True, blank=False)
     name = models.CharField(max_length=255, null=True, blank=False)
+    image = models.ImageField(
+        null=True, blank=True, upload_to='images/parts/', default='images/parts/part_placeholder.png')
     description = models.TextField(max_length=5000, null=True, blank=True)
     quality_fac = models.FloatField(null=False, blank=False, validators=[
                                     MinValueValidator(1), MaxValueValidator(100)])
-    price = models.FloatField(default=0, null=True, blank=False)
+    price = models.FloatField(default=0, null=True,
+                              blank=False, validators=[MinValueValidator(5)])
     time_of_delivery = models.IntegerField(null=False, blank=False, validators=[
                                            MinValueValidator(1), MaxValueValidator(60)])
     quantity = models.IntegerField(null=True, blank=False)
@@ -90,22 +94,41 @@ class Part(models.Model):
 
         lowest_price_part = parts[0]
         for part in parts:
-            if part.price < lowest_price_part:
-                lowest_price_part = part.price
+            if part.price < lowest_price_part.price:
+                lowest_price_part = part
 
         return lowest_price_part
 
-    def part_sum(self, quality, price, time):
+    def highetst_quality(parts):
+
+        highest_quality_part = parts[0]
+        for part in parts:
+            if part.quality_fac > highest_quality_part.quality_fac:
+                highest_quality_part = part
+
+        return highest_quality_part
+
+    def fastest_time_delivery(parts):
+
+        fastest_time_delivery_part = parts[0]
+        for part in parts:
+            if part.time_of_delivery < fastest_time_of_delivery_part.time_of_delivery:
+                fastest_time_of_delivery_part = part
+
+        return fastest_time_delivery_part
+
+    def optimal_fac(self):
         return round((0.5 * self.quality_fac) - (0.35 * self.price) - (0.15 * self.time_of_delivery), 2)
 
     # Correction after save new product
     def save(self, *args, **kwargs):
-
-        # Price of any part in shop cannot be equal 0
-        if self.price <= 0:
-            self.price = 10
-
         # If part is original, for logical schema this part don't have parent then set this param as NULL, and round price to second decimal place
-        self.price = round(self.price, 2)
+        if self.is_original:
+            self.original_id = None
 
+        if self.quantity < 0:
+            self.quantity = 0
+
+        # Round to 2 decimal places
+        self.price = round(self.price, 2)
         super(Part, self).save(*args, **kwargs)

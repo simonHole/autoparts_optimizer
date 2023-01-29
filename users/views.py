@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from .forms import LoginForm, RegistrationForm
 from django.contrib.auth import logout
+from django.contrib import messages
+
+from django.contrib.auth.models import User
+from .forms import LoginForm, RegisterForm
 
 
 def user_login(request):
@@ -28,23 +30,27 @@ def user_login(request):
 
 
 def user_register(request):
+    page = 'register'
+    form = RegisterForm()
 
     if request.method == 'POST':
-        form = RegistrationForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
-            # Process the form data
-            login = form.cleaned_data['login'].lower()
-            password = form.cleaned_data['password']
-            first_name = form.cleaned_data['first_name']
-            last_name = form.cleaned_data['last_name']
-            email = form.cleaned_data['email']
-            User.save()
+            user = form.save(commit=False)
+            user.username = user.username.lower()
+            user.save()
 
+            messages.success(request, 'Rejestracja przebiegła pomyślnie.')
+
+            login(request, user)
             return redirect('index')
-    else:
-        form = RegistrationForm()
 
-    return render(request, 'users/register.html', {'form': form})
+        else:
+            messages.success(
+                request, 'Błąd podczas rejestracji.')
+
+    context = {'page': page, 'form': form}
+    return render(request, 'users/register.html', context)
 
 
 @login_required(login_url='login')

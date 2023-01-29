@@ -1,76 +1,114 @@
 {% extends 'index.html' %}
+
+{% load static %}
+
 {% block content %}
-<style>
 
-    table {
-        border: 1px solid #202020;
-    }
+<section style="background-color: #eee;">
+    <div class="container py-3">
+        <div class="row justify-content-center">
+            <div class="col-md-16 col-lg-8 col-xl-6">
+                <div class="card">
+                    <div class="bg-image hover-overlay ripple ripple-surface ripple-surface-light"
+                        data-mdb-ripple-color="light">
+                        {{current_part.image_url}}
+                        <img class="col-md-16 col-lg-18 col-xl-12" src="/static{{current_part.image.url}}"
+                            width=100 height=350 alt="Nie znaleziono." />
+                        <a href="#!">
+                            <div class="mask"></div>
+                        </a>
+                    </div>
+                    <hr class="hr" />
+                    <div class="card-body pb-0">
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                <p><strong>{{current_part.name}}</strong></p>
+                                <p class="small text-muted">Producent: <strong>{{current_part.vendor}}</strong></p>
+                                <p class="small text-muted">Numer katalogowy: <strong>{{current_part.catalog_number}}</strong></p>
+                                <p class="small text-muted">Jakość produktu: <strong>{{current_part.quality_fac}}</strong></p>
+                            </div>
+                            <div>
+                                <div class="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                    <i class="fas fa-star"></i>
+                                </div>
+                                <p class="small text-muted text-center">
+                                    {% if current_part.is_original %}
+                                        <strong style="color: rgb(7, 233, 18)">Oryginał</strong>
+                                    {% else %}
+                                        <strong style="color: red;">Zamiennik</strong>
+                                    {% endif %}
+                                </p>
+                                <p class="text-muted">Cena: {{current_part.price}} PLN</p>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-0" />
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</section>
     
-    tr {
-        border: 1px solid #202020;
-    }
-    td {
-        border: 1px solid #202020;
-        text-align: center;
-    }
-
-</style>
-
-<h5>{{part}}</h5>
-
-<table>
-    <tr>
-        <h5>Zaznacz które rzeczy cię najbardziej intersują aby obliczyć najkorzystniejsza ofertę</h5>
-        <form method="post">
-            <label for="time">Czas</label>
-            <br>
-            <input type="range" min="1" max="100" value="50" id="time">
-            <br>
-            <label for="quality">Jakość</label>
-            <br>
-            <input type="range" min="1" max="100" value="50" id="quality">
-            <br>
-            <input type="submit" value="Wyznacz">
+        <h5 class="mt-5 tex-center">Obliczenie ogólnej oceny produktu</h5>
+        <p>Wyznacz wagę współczynników według swoich preferencji aby uzyskać najlepszy efekt.</p>
+        <form method="post" class="row justify-content-center">
+            {% csrf_token %}
+            <label for="quality" class="form-label">Jakość</label>
+            <input type="range" id="price" min="0" max="100" value="50" name="price" class="form-range">
+            <label for="price" class="form-label">Cena</label>
+            <input type="range" id="quality" min="0" max="100" value="50" name="quality" class="form-range">
+            <label for="time" class="form-label">Czas</label>
+            <input type="range" id="time" min="0", max="100", value="50" name="time" class="form-range">
+            <input type="submit" class="mt-5 btn btn-success" value="Dokonaj podsumowania">
         </form>
-        <br><br>
 
-
-        <h5>O produkcie</h5>
-
-        <table>
-            <tr>
-                <td>Producent</td>
-                <td>Numer katalogowy</td>
-                <td>OEM</td>
-                <td>Współczynnik ogólny</td>
-            </tr>
-            <tr>
-                <td>{{select_part.vendor.name}}</td>
-                <td>{{select_part.catalog_number}}</td>
+        <h3 class="mt-5">Pasujące części</h3>
+        <table class="table table-striped">
+            <thead class="text-center">
+                <th scope="col">Nazwa</th>
+                <th scope="col">Producent</th>
+                <th scope="col">Nr. katalogowy</th>
+                <th scope="col">Ilość magazynowa</th>
+                <th scope="col">Jakośc produktu</th>
+                <th scope="col">Status produktu</th>
+                <th scope="col">Cena produktu</th>
+            </thead>
+            {% for part in others %}
+            <tr class="text-center">
+                <th scope="row"><a href="{% url 'show_part' part.id %}">{{part.name}}</a></th>
+                <td>{{part.vendor}}</td>
+                <td>{{part.catalog_number}}</td>
+                <td>{{part.quantity}} szt.</td>
+                <td>{{part.quality_fac}}</td>
                 <td>
-                {% if select_part.original_id == None %}
-                    --
-                {% else %}
-                    {{select_part.original_id.vendor}} {{select_part.original_id.catalog_number}} 
-                {% endif %}
+                    {% if part.is_original %}
+                    <strong style="color: rgb(7, 233, 18)">Oryginał</strong>
+                    {% else %}
+                    <strong style="color: red;">Zamiennik</strong>
+                    {% endif %}
                 </td>
+                <td>{{part.price}} PLN</td>
             </tr>
+            {% endfor %}
         </table>
-        <br>
-        <h3>Zamienniki</h3>
-        {% for part in substitutes %}
-            <p><a href="{% url 'show_part' part.id %}">{{part}}</a> {{part.part_sum}}</p>
-        {% endfor %}
 
-    </tr>
-</table>
 
 <script>
-    'use strict';
-    const timeBar = document.querySelector('#time');
-    const qualityBar = document.querySelector('#quality');
+        'use strict';
+        var price = document.getElementById("price");
+        var quality = document.getElementById("quality");
 
-    timeBar.value = 100 - qualityBar.value;
+        price.addEventListener("input", () => {
+            quality.value = 100 - price.value;
+        })
+
+        quality.addEventListener("input", () => {
+            price.value = 100 - quality.value
+        })
 </script>
 
 {% endblock %}

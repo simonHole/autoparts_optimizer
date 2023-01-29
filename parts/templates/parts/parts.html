@@ -2,9 +2,19 @@
 {% load static %}
 {% block content %}
 
-<div class="container md-5">
-    <h1 class="text-center font-weight-normal"></h1>
-</div>
+{% if parts.count > 0 %}
+<section id="cars" class="bg-light">
+    <div class="container-lg">
+        <div class="text-center">
+            <h3>{{engine}} - lista dostępnych części</h3>
+            <p>
+                Poniżej znajduje się lista dostępnych części do wyżej podanego numeru silnika, jeżeli nie ma części która
+                cię interesuje, spróbuj przeszukać inny silnik lub poczekaj na wprowadzenie zmian.
+            </p>
+        </div>
+    </div>
+</section>
+{% endif %}
 
 {% if parts.count > 0 %}
 <section style="background-color: #eee;">
@@ -17,7 +27,7 @@
                         <div class="row">
                             <div class="col-md-12 col-lg-3 col-xl-3 mb-4 mb-lg-0">
                                 <div class="bg-image hover-zoom ripple rounded ripple-surface">
-                                    <img src="{% static 'images/product.png' %}"
+                                    <img src="/static{{part.image.url}}"
                                         class="w-100" />
                                     <a href="#!">
                                         <div class="hover-overlay">
@@ -36,21 +46,35 @@
                                         <i class="fa fa-star"></i>
                                         <i class="fa fa-star"></i>
                                     </div>
-                                    <span>{{part.vendor.name}}</span>
+                                    <span>Producent: <strong>{{part.vendor.name}}</strong></span>
                                 </div>
                                 <div class="mt-1 mb-0 text-muted small">
-                                    <span>100% cotton</span>
-                                    <span class="text-primary"> • </span>
-                                    <span>Light weight</span>
-                                    <span class="text-primary"> • </span>
-                                    <span>Best finish<br /></span>
+                                    <span>
+                                        {% if part.is_original %}
+                                        <strong style="color: #08e613">Oryginał</strong>
+                                        {% else %}
+                                        <strong style="color: #d30b15">Zamienik</strong>
+                                        {% endif %}
+                                    </span>
                                 </div>
                                 <div class="mb-2 text-muted small">
-                                    <span>Unique design</span>
+                                    <span>Jakośc produktu: {{part.quality_fac}}</span>
                                     <span class="text-primary"> • </span>
-                                    <span>For men</span>
-                                    <span class="text-primary"> • </span>
-                                    <span>Casual<br /></span>
+                                    <span>
+                                        Czas dostawy:
+                                        {{part.time_of_delivery}}
+                                        {% if part.time_of_delivery == 1 %}
+                                        dzień
+                                        {% else %}
+                                        dni
+                                        {% endif %}
+                                    </span>
+                                    <span>
+                                        {% if not part.is_original %}
+                                            <span class="text-primary"> • </span>
+                                            OEM: {{part.original_id.catalog_number}}
+                                        {% endif %}
+                                    </span>
                                 </div>
                                 <p class="text-truncate mb-4 mb-md-0">
                                     {{part.engine_id}}
@@ -61,21 +85,26 @@
                                     <h4 class="mb-1 me-1">{{part.price}} PLN</h4>
                                     
                                 </div>
-                                <h6 class="text">Czas dostawy: 
-                                    {{part.time_of_delivery}} 
-                                    {% if part.time_of_delivery == 1 %}
-                                    dzień
+                                <h6 class="text">
+                                    {% if part.quantity == 0 %}
+                                        <span style="color: rgb(233, 8, 8);"><strong>Brak produktu w magazynie</strong></span>
                                     {% else %}
-                                    dni
+                                        <span>Ilośc magazynowa: {{part.quantity}}</span> 
                                     {% endif %}
                                 </h6>
                                 <div class="d-flex flex-column mt-4">
                                     <a class="btn btn-primary btn-sm" href="{% url 'show_part' part.id %}">
                                         Szczegóły
                                     </a>
+                                    {% if part.quantity == 0 %}
+                                    <span class="btn btn-outline-dark btn-sm mt-2" style="pointer-events: none; cursor: not-allowed;">
+                                        Niedostępny
+                                    </span>
+                                    {% else %}
                                     <a href="{% url 'add_to_cart' part.id %}" class="btn btn-outline-primary btn-sm mt-2">
                                         Dodaj do koszyka
                                     </a>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>

@@ -8,7 +8,7 @@ def index(request):
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/', admin.site.urls, name='admin'),
     path('', index, name='index'),
 
     path('', include('users.urls')),

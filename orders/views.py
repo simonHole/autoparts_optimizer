@@ -7,7 +7,13 @@ from parts.models import Part
 
 
 def orders(request):
-    return HttpResponse('Orders View.')
+    if request.uster.is_authenticated:
+        pass
+
+    context = {
+
+    }
+    return render(request, 'orders/cart.html', context)
 
 
 def cart(request):

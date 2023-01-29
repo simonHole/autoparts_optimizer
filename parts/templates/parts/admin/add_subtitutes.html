@@ -1,0 +1,52 @@
+{% extends 'root.html' %}
+{% load bootstrap_icons %}
+{% load static %}
+
+{% block content %}
+    <!-- <a href="#" class="btn btn-primary">{% bs_icon 'plus' %}</a> -->
+    <section id="cars" class="bg-light">
+        <div class="container-lg">
+            <div class="text-center">
+                <h3>{{original.name}} - Zamienniki</h3>
+                <p>Poniżej masz podaną listę oryginalnych części, wybierz który chciałbyś zmodyfikować bądź dodać nowy
+                    zamiennik</p>
+            </div>
+        </div>
+    </section>
+
+    <table class="table table-striped">
+        <thead class="text-center">
+            <th scope="col">Nazwa</th>
+            <th scope="col">Producent</th>
+            <th scope="col">Nr. katalogowy</th>
+            <th scope="col">Cena produktu</th>
+            <th scope="col">Ilość magazynowa</th>
+            <th scope="col">Jakośc produktu</th>
+            <th scope="col">Opłacalność bazowa</th>
+            <th scope="col" colspan="2">Dostępne opcje modyfikacji oryginalnej części</th>
+        </thead>
+        {% for substitute in substitutes %}
+        <tr class="text-center">
+            <th scope="row"><a href="{% url 'show_part' substitute.id %}">{{substitute.name}}</a></th>
+            <td>{{substitute.vendor}}</td>
+            <td>{{substitute.catalog_number}}</td>
+            <td>{{substitute.price}} PLN</td>
+            <td>
+                {% if substitute.quantity > 0 %}
+                    {{substitute.quantity}} szt.
+                {% else %}
+                    <strong style="color: red;">Brak</strong>
+                {% endif %}
+            </td>
+            <td>{{substitute.quality_fac}}</td>
+            <td><strong>{{substitute.optimal_fac}}</strong></td>
+            <td colspan="2">
+                <a href="{% url 'edit-substitute' substitute.id %}"> <button type="button"
+                        class="btn btn-success">Edytuj</button></a>
+                <a href="{% url 'delete-part' substitute.id %}"> <button type="button"
+                        class="btn btn-danger">Usuń</button></a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock content %}

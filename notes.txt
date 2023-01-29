@@ -1,0 +1,52 @@
+1. Lookup API referencje in Django
+
+Example of queries:
+Question.objects.filter(id=1)
+Question.objects.filter(question_text__startswith='What')
+Question.objects.filter(pub_date__year=current_year)
+
+If object (record) does not exist in database, Python will return DoesNotExist exception
+
+Shortucts -> Django provide specific shortucts for lookup API reference for example : pk -> Question.objects.get(pk=1)
+
+To get all Choices from specific Question use the 'foreign_key'_set.all() function
+'foreign_key'_set.all() return QuerySet of elements which is referenced with foreign key.
+
+Reference to Foreign key from level of primary key
+Chocie.objects.filter(question_pub_date__year=current_year)
+
+To remove object from database use
+'Model'.objects.delete(id=1)
+
+Know more about related objects reference -> https://docs.djangoproject.com/en/4.1/ref/models/relations/
+
+When we send for example https://path/polls/34/detail
+is working by URLconfs -> detail(request=<HttpResponse object>, question_id = 34)
+
+All queries:
+    - get all Questions                                     -> Question.objects.all()
+    - get Question which title equal 'Nice'                 -> Question.objects.get(title='Nice')
+    - get Question which start by 'What' word               -> Question.objects.filter(title__startswith='What')
+    - get Part which price is greater than 10 (or equal)    -> Part.objects.get(price__gte=10)  (You can also use lte)
+
+    - get Part which name contain 'PP360'                   -> Part.objects.filter(name__contains='PP360')
+    - get Part which price is greater than 50               -> Part.objects.filter(name__gt=50)
+    - exclude specific object from QuerySet                 -> Part.objects.filter(price__gt=50).exclude(id=1)
+    - order Part descending by price                        -> Part.objects.all().order_by('-price')
+    - Create an instance of a models                        -> Question.objecst.create(attribute_1=value_1, attribute_2=value_2)
+
+    - To change some value on the other in Model:
+        - project = Project.objects.get(id=1)
+        - project.title = 'My Portfolio'
+        - project.save()
+
+    - To delete object from Models                          -> Project.objects.get(id=1).delete()
+    - To get all childerns from OneToMany relations         -> Project.choice_set.all()
+    
+    ManyToMany queries
+
+    - To get all relation elements from many to many:
+        - project = Project.object.get(id=1)
+        - project.tags.all()
+
+    

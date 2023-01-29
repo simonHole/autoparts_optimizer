@@ -1,0 +1,46 @@
+{% extends 'index.html' %}
+{% block content %}
+<section id="cars" class="bg-light">
+    <div class="container-lg">
+        <div class="text-center">
+            <h3>Administrator - zarządzanie częściami</h3>
+            <p>Poniżej masz podaną listę oryginalnych części, wybierz który chciałbyś zmodyfikować bądź dodać nowy zamiennik</p>
+        </div>
+    </div>
+</section>
+
+<table class="table table-striped">
+    <thead class="text-center">
+        <th scope="col">Nazwa</th>
+        <th scope="col">Producent</th>
+        <th scope="col">Nr. katalogowy</th>
+        <th scope="col">Cena produktu</th>
+        <th scope="col">Ilość magazynowa</th>
+        <th scope="col">Jakośc produktu</th>
+        <th scope="col">Opłacalność bazowa</th>
+        <th scope="col" colspan="2">Dostępne opcje modyfikacji oryginalnej części</th>
+        </thead>
+    {% for original in originals %}
+    <tr class="text-center">
+        <th scope="row"><a href="{% url 'show_part' original.id %}">{{original.name}}</a></th>
+        <td>{{original.vendor}}</td>
+        <td>{{original.catalog_number}}</td>
+        <td>{{original.price}} PLN</td>
+        <td>
+            {% if original.quantity == 0 %}
+            <strong style="color: red;">Brak produktu</strong>
+            {% else %}
+            {{original.quantity}} szt.
+            {% endif %}
+        </td>
+        <td>{{original.quality_fac}}</td>
+        <td><strong>{{original.optimal_fac}}</strong></td>
+        <td colspan="2">
+            <a href="{% url 'edit-original' original.id %}"> <button type="button" class="btn btn-success">Edytuj</button></a>
+            <a href="{% url 'substitute' original.id %}"> <button type="button" class="btn btn-primary">Zamienniki</button></a>
+            <a href="{% url 'delete-part' original.id %}"> <button type="button" class="btn btn-danger">Usuń</button></a>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
