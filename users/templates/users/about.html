@@ -1,18 +1,21 @@
 {% extends 'index.html' %}
 {% block content %}
-    <table border="1">
-        <h1>Dane osobowe użytkownika</h1>
-        <tr>
-            <td><strong>Imie</strong></td>
-            <td>{{user.first_name}}</td>
-        </tr>
-        <tr>
-            <td><strong>Nazwisko</strong></td>
-            <td>{{user.last_name}}</td>
-        </tr>
-        <tr>
-            <td><strong>Email</strong></td>
-            <td>{{user.email}}</td>
-        </tr>
-    </table>
+<table class="table table-striped">
+    <thead class="text-center">
+        <th scope="col">Nazwa użytkownika</th>
+        <th scope="col">Producent</th>
+        <th scope="col">Nazwisko</th>
+        <th scope="col">Adres e-mail</th>
+        <th scope="col">Data utworzenia</th>
+    </thead>
+    <tr class="text-center">
+        <td>
+            <strong>{{user.username}}</strong>
+        </td>
+        <td>{{user.first_name}}</td>
+        <td>{{user.last_name}}</td>
+        <td>{{user.email}}</td>
+        <td>{{user.created}}</td>
+    </tr>
+</table>
 {% endblock %}

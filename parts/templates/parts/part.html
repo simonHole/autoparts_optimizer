@@ -13,7 +13,7 @@
                         data-mdb-ripple-color="light">
                         {{current_part.image_url}}
                         <img class="col-md-16 col-lg-18 col-xl-12" src="/static{{current_part.image.url}}"
-                            width=100 height=350 alt="Nie znaleziono." />
+                            width=250 height=350 alt="Nie znaleziono." />
                         <a href="#!">
                             <div class="mask"></div>
                         </a>
@@ -26,6 +26,32 @@
                                 <p class="small text-muted">Producent: <strong>{{current_part.vendor}}</strong></p>
                                 <p class="small text-muted">Numer katalogowy: <strong>{{current_part.catalog_number}}</strong></p>
                                 <p class="small text-muted">Jakość produktu: <strong>{{current_part.quality_fac}}</strong></p>
+                                <p class="small text-muted">Czas dostawy:
+                                    <strong> 
+                                    {{current_part.time_of_delivery}}
+                                    {% if current_part.time_of_delivery == 1 %}
+                                    dzień
+                                    {% else %}
+                                    dni
+                                    {% endif %}
+                                    </strong>
+                                </p>
+                                <p>
+                                    Uwagi:
+                                    <strong>
+                                        {% if current_part == cheapest %}
+                                        <span style="color: green">Najtanszy</span>    
+                                        {% elif current_part == highest_quality %}
+                                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span> 
+                                        {% elif current_part == fastest_delivery %}
+                                        <span style="color: blue">Najszybszy czas dostawy</span>
+                                        {% else %}
+                                        Brak
+                                        {% endif %}
+                                    </strong>
+                                </p>
+                                <p>Ocena produktu: {{current_part.optimal_fac}}</p>
+                                <p class="small text-muted">Silnik: <strong>{{current_part.engine_id}}</strong></p>
                             </div>
                             <div>
                                 <div class="d-flex flex-row justify-content-end mt-1 mb-4 text-danger">
@@ -52,19 +78,6 @@
         </div>
     </div>
 </section>
-    
-        <h5 class="mt-5 tex-center">Obliczenie ogólnej oceny produktu</h5>
-        <p>Wyznacz wagę współczynników według swoich preferencji aby uzyskać najlepszy efekt.</p>
-        <form method="post" class="row justify-content-center">
-            {% csrf_token %}
-            <label for="quality" class="form-label">Jakość</label>
-            <input type="range" id="price" min="0" max="100" value="50" name="price" class="form-range">
-            <label for="price" class="form-label">Cena</label>
-            <input type="range" id="quality" min="0" max="100" value="50" name="quality" class="form-range">
-            <label for="time" class="form-label">Czas</label>
-            <input type="range" id="time" min="0", max="100", value="50" name="time" class="form-range">
-            <input type="submit" class="mt-5 btn btn-success" value="Dokonaj podsumowania">
-        </form>
 
         <h3 class="mt-5">Pasujące części</h3>
         <table class="table table-striped">
@@ -73,9 +86,12 @@
                 <th scope="col">Producent</th>
                 <th scope="col">Nr. katalogowy</th>
                 <th scope="col">Ilość magazynowa</th>
+                <th scope="col">Czas dostawy</th>
                 <th scope="col">Jakośc produktu</th>
                 <th scope="col">Status produktu</th>
                 <th scope="col">Cena produktu</th>
+                <th scope="col">Ocena produktu</th>
+                <th scope="col">Uwagi</th>
             </thead>
             {% for part in others %}
             <tr class="text-center">
@@ -83,6 +99,14 @@
                 <td>{{part.vendor}}</td>
                 <td>{{part.catalog_number}}</td>
                 <td>{{part.quantity}} szt.</td>
+                <td>
+                    {{part.time_of_delivery}}
+                    {% if part.time_of_delivery == 1 %}
+                    dzień
+                    {% else %}
+                    dni
+                    {% endif %}
+                </td>
                 <td>{{part.quality_fac}}</td>
                 <td>
                     {% if part.is_original %}
@@ -92,9 +116,40 @@
                     {% endif %}
                 </td>
                 <td>{{part.price}} PLN</td>
+                <td>{{part.optimal_fac  }}</td>
+                <td>
+                    <strong>
+                        {% if part == cheapest %}
+                        <span style="color: green">Najtanszy</span>
+                        {% elif part == highest_quality %}
+                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span>
+                        {% elif part == fastest_delivery %}
+                        <span style="color: blue">Najszybszy czas dostawy</span>
+                        {% else %}
+                        Brak
+                        {% endif %}
+
+                        {% if part == best_product %}
+                        <span style="color: purple">Najlepszy produkt</span>
+                        {% endif %}
+                    </strong>
+                </td>
             </tr>
             {% endfor %}
-        </table>
+        </table class="mb-5">
+
+<h5 class="mt-5 tex-center">Obliczenie ogólnej oceny produktu</h5>
+<p>Wyznacz wagę współczynników według swoich preferencji aby uzyskać najlepszy efekt.</p>
+<form method="post" class="row justify-content-center">
+    {% csrf_token %}
+    <label for="quality" class="form-label">Jakość</label>
+    <input type="range" id="price" min="0" max="100" value="50" name="price" class="form-range">
+    <label for="price" class="form-label">Cena</label>
+    <input type="range" id="quality" min="0" max="100" value="50" name="quality" class="form-range">
+    <label for="time" class="form-label">Czas</label>
+    <input type="range" id="time" min="0" , max="100" , value="50" name="time" class="form-range">
+    <input type="submit" class="mt-5 btn btn-success" value="Dokonaj podsumowania">
+</form>
 
 
 <script>

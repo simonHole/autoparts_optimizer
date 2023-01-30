@@ -31,14 +31,17 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'admin-management' %}">System zarządzania</a>
                         </li>
-                        {% else %}
+                        {% else %}  
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'show_marks' %}">Samochody</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'cart' %}">Koszyk</a>
-                        </li>   
+                        </li>
                         {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'user_about' %}">Użytkownik</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'logout' %}">Wyloguj </a>
                         </li>

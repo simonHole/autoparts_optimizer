@@ -64,8 +64,8 @@ class Engine(models.Model):
 class Part(models.Model):
     id = models.UUIDField(default=uuid4, unique=True,
                           primary_key=True)
-
-    engine_id = models.ForeignKey(Engine, on_delete=models.CASCADE)
+    engine_id = models.ForeignKey(
+        Engine, on_delete=models.CASCADE, null=True, blank=False)
     vendor = models.ForeignKey(
         Vendor, on_delete=models.CASCADE, null=True, blank=False)
     catalog_number = models.CharField(max_length=75, null=True, blank=False)
@@ -112,15 +112,30 @@ class Part(models.Model):
 
         fastest_time_delivery_part = parts[0]
         for part in parts:
-            if part.time_of_delivery < fastest_time_of_delivery_part.time_of_delivery:
-                fastest_time_of_delivery_part = part
+            if part.time_of_delivery < fastest_time_delivery_part.time_of_delivery:
+                fastest_time_delivery_part = part
 
         return fastest_time_delivery_part
 
-    def optimal_fac(self):
-        return round((0.5 * self.quality_fac) - (0.35 * self.price) - (0.15 * self.time_of_delivery), 2)
+    def optimal_fac(self, quality=5, price=3.5, time=1.5):
+        return round((quality * self.quality_fac) - (price * self.price) - (time * self.time_of_delivery), 2)
+
+    def best_product(parts, quality=5.0, price=3.5, time=1.5):
+        # Analize all parts
+        all_optimals = [part.optimal_fac() for part in parts]
+
+        best_fac = 0
+        best_fac_index = 0
+
+        for index, optimal in enumerate(all_optimals):
+            if best_fac < optimal:
+                best_fac_index = index
+                best_fac = optimal
+
+        return parts[best_fac_index]
 
     # Correction after save new product
+
     def save(self, *args, **kwargs):
         # If part is original, for logical schema this part don't have parent then set this param as NULL, and round price to second decimal place
         if self.is_original:

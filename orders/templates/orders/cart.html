@@ -11,21 +11,30 @@
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h3 class="fw-normal mb-0 text-black">Twój koszyk</h3>
                     <div>
-                        <p class="mb-0"><span class="text-muted">Dane osobowe: </span> <a href="#!" class="text-body">{{request.user.first_name}} {{request.user.last_name}} <i
-                                    class="fas fa-angle-down mt-1"></i></a></p>
+                        <!-- <p class="mb-0"><span class="text-muted">Dane osobowe: </span> <a href="#!" class="text-body">{{request.user.first_name}} {{request.user.last_name}} <i
+                                    class="fas fa-angle-down mt-1"></i></a></p> -->
                     </div>
                 </div>
 
+                {% for item in items %}
                 <div class="card rounded-3 mb-4">
                     <div class="card-body p-4">
                         <div class="row d-flex justify-content-between align-items-center">
                             <div class="col-md-2 col-lg-2 col-xl-2">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                <img src="/static{{item.part.image.url}}"
                                     class="img-fluid rounded-3" alt="Cotton T-shirt">
                             </div>
                             <div class="col-md-3 col-lg-3 col-xl-3">
-                                <p class="lead fw-normal mb-2">Basic T-shirt</p>
-                                <p><span class="text-muted">Size: </span>M <span class="text-muted">Color: </span>Grey
+                                <p class="lead fw-normal mb-2">{{item.part.name}}</p>
+                                <p>
+                                    <span class="text-muted">Jakość: </span> {{item.part.quality_fac}}
+                                    <br> 
+                                    <span class="text-muted">Czas dostawy: </span>{{item.part.time_of_delivery}}
+                                    {% if item.part.time_of_delivery == 1 %}
+                                    dzień
+                                    {% else %}
+                                    dni
+                                    {% endif %}
                                 </p>
                             </div>
                             <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
@@ -34,8 +43,7 @@
                                     <i class="fas fa-minus"></i>
                                 </button>
 
-                                <input id="form1" min="0" name="quantity" value="2" type="number"
-                                    class="form-control form-control-sm" />
+                                <p class="form-control form-control-sm text-center" >{{item.quantity}} szt.</p>
 
                                 <button class="btn btn-link px-2"
                                     onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
@@ -43,7 +51,7 @@
                                 </button>
                             </div>
                             <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                <h5 class="mb-0">$499.00</h5>
+                                <h5 class="mb-0">{{item.total|floatformat:2}} PLN</h5>
                             </div>
                             <div class="col-md-1 col-lg-1 col-xl-1 text-end">
                                 <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
@@ -51,46 +59,24 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="card rounded-3 mb-4">
-                    <div class="card-body p-4">
-                        <div class="row d-flex justify-content-between align-items-center">
-                            <div class="col-md-2 col-lg-2 col-xl-2">
-                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
-                                    class="img-fluid rounded-3" alt="Cotton T-shirt">
-                            </div>
-                            <div class="col-md-3 col-lg-3 col-xl-3">
-                                <p class="lead fw-normal mb-2">Basic T-shirt</p>
-                                <p><span class="text-muted">Size: </span>M <span class="text-muted">Color: </span>Grey
-                                </p>
-                            </div>
-                            <div class="col-md-3 col-lg-3 col-xl-2 d-flex">
-                                <button class="btn btn-link px-2"
-                                    onclick="this.parentNode.querySelector('input[type=number]').stepDown()">
-                                    <i class="fas fa-minus"></i>
-                                </button>
-
-                                <input id="form1" min="0" name="quantity" value="2" type="number"
-                                    class="form-control form-control-sm" />
-
-                                <button class="btn btn-link px-2"
-                                    onclick="this.parentNode.querySelector('input[type=number]').stepUp()">
-                                    <i class="fas fa-plus"></i>
-                                </button>
-                            </div>
-                            <div class="col-md-3 col-lg-2 col-xl-2 offset-lg-1">
-                                <h5 class="mb-0">$499.00</h5>
-                            </div>
-                            <div class="col-md-1 col-lg-1 col-xl-1 text-end">
-                                <a href="#!" class="text-danger"><i class="fas fa-trash fa-lg"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                {% endfor %}
 
                 <div class="card">
                     <div class="card-body">
-                        <button type="button" class="btn btn-warning btn-block btn-lg">Przejdź do płatności</button>
+                        <p>Łaczna liczba produktów: {{order.cart_items}} szt.</p>
+                        <p>Łączna kwota: <strong>{{order.cart_total|floatformat:2}} PLN</strong></p>
+                        <p>
+                            Ostateczny czas dostawy:
+                            <strong>
+                                {{order.latest_delivery_days}}
+                                {% if order.latest_delivery_days == 1%}
+                                dzień
+                                {% else %}
+                                dni
+                                {% endif%}
+                            </strong>
+                            </p>
+                        <!-- <button type="button" class="btn btn-warning btn-block btn-lg">Przejdź do płatności</button> -->
                     </div>
                 </div>
 

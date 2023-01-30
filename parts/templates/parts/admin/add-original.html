@@ -1,0 +1,11 @@
+{% extends 'root.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form|crispy}}
+    <input type="submit" class="btn btn-success" value="Stwórz">
+    <a href="{% url 'admin-management' %}" class="btn btn-warning">Cofnij</a>
+</form>
+
+{% endblock %}
