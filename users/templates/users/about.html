@@ -1,5 +1,9 @@
-{% extends 'index.html' %}
+{% extends 'root.html' %}
+
+{% block title %} O użytkowniku {% endblock %}
+
 {% block content %}
+
 <table class="table table-striped">
     <thead class="text-center">
         <th scope="col">Nazwa użytkownika</th>
@@ -12,10 +16,11 @@
         <td>
             <strong>{{user.username}}</strong>
         </td>
-        <td>{{user.first_name}}</td>
-        <td>{{user.last_name}}</td>
-        <td>{{user.email}}</td>
-        <td>{{user.created}}</td>
+        <td>{{client.name}}</td>
+        <td>{{client.surname}}</td>
+        <td>{{client.email}}</td>
+        <td>{{client.created}}</td>
+        <td><a class="btn btn-success" href="{% url 'client_edit' %}">Edytuj</a></td>
     </tr>
 </table>
 {% endblock %}

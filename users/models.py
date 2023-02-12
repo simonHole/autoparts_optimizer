@@ -6,7 +6,7 @@ from uuid import uuid4
 class Client(models.Model):
     id = models.UUIDField(default=uuid4, unique=True,
                           primary_key=True, editable=False)
-    user = models.ForeignKey(
+    user = models.OneToOneField(
         User, on_delete=models.CASCADE, null=True, blank=True)
     username = models.CharField(
         max_length=200, null=True, blank=True, unique=True)

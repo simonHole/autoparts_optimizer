@@ -7,13 +7,15 @@ from django.db.models.signals import post_save, post_delete
 def create_client(sender, instance, created, **kwargs):
     if created:
         user = instance
-        client = Client.objects.create(
+        client = Client(
             user=user,
             username=user.username,
             email=user.email,
             name=user.first_name,
             surname=user.last_name
         )
+
+        client.save()
 
 
 def update_user(sender, instance, created, **kwargs):

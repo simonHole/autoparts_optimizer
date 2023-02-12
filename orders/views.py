@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
 
 from .models import Order, OrderItem, Client
+from .forms import SendAddress
 from parts.models import Part
 
 
@@ -27,7 +28,7 @@ def cart(request):
             client=client, complete=False)
         items = order.orderitem_set.all()
     else:
-        return redirect('inex')
+        return redirect('index')
 
     context = {
         'order': order,
@@ -39,14 +40,16 @@ def cart(request):
 @login_required(login_url='index')
 def checkout(request):
     if request.user.is_authenticated:
-        client = Client.objects.get(user=request.user)
+        form = SendAddress()
+        client = request.user.client
         order, created = Order.objects.get_or_create(
             client=client, complete=False)
         items = order.orderitem_set.all()
     else:
-        return redirect('inex')
+        return redirect('index')
 
     context = {
+        'form': form,
         'order': order,
         'items': items
     }

@@ -65,3 +65,6 @@ class ShipAddress(models.Model):
     zipcode = models.CharField(max_length=200, null=True, blank=False)
     address = models.CharField(max_length=200, null=True, blank=False)
     apartament = models.CharField(max_length=200, null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.zipcode} {self.city} - {self.address}'

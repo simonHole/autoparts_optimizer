@@ -41,16 +41,37 @@
                                     <strong>
                                         {% if current_part == cheapest %}
                                         <span style="color: green">Najtanszy</span>    
-                                        {% elif current_part == highest_quality %}
-                                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span> 
-                                        {% elif current_part == fastest_delivery %}
-                                        <span style="color: blue">Najszybszy czas dostawy</span>
-                                        {% else %}
-                                        Brak
                                         {% endif %}
+                                        {% if current_part == highest_quality %}
+                                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span> 
+                                        {% endif %}
+                                        {% if current_part == fastest_delivery %}
+                                        <span style="color: blue">Najszybszy czas dostawy</span>                                      
+                                        {% endif %}
+                                           
+                                        {% if request.method == 'POST' %}
+                                            {% if current_part == new_best_product %}
+                                            <span style="color: purple">Najlepszy produkt</span>
+                                            {% endif %}
+                                        {% else %}
+                                            {% if current_part == best_product %}
+                                            <span style="color: purple">Najlepszy produkt</span>
+                                            {% endif %}
+                                        {% endif %}  
                                     </strong>
                                 </p>
-                                <p>Ocena produktu: {{current_part.optimal_fac}}</p>
+                                <p>
+                                    Ocena produktu:
+                                    {% if request.method == 'POST' %}
+                                        {% for new_part, optimal in part_with_optimal %}
+                                            {% if current_part == new_part %}
+                                                {{optimal}}
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% else %}
+                                    {{current_part.optimal_fac}}
+                                    {% endif %}
+                                </p>
                                 <p class="small text-muted">Silnik: <strong>{{current_part.engine_id}}</strong></p>
                             </div>
                             <div>
@@ -116,22 +137,36 @@
                     {% endif %}
                 </td>
                 <td>{{part.price}} PLN</td>
-                <td>{{part.optimal_fac  }}</td>
+                <td>
+                    {% if request.method == 'POST' %}
+                        {% for new_part, optimal in part_with_optimal %}
+                            {% if part == new_part %}
+                                {{optimal}}
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                    {{part.optimal_fac}}</td>
+                    {% endif %}
                 <td>
                     <strong>
                         {% if part == cheapest %}
-                        <span style="color: green">Najtanszy</span>
-                        {% elif part == highest_quality %}
-                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span>
-                        {% elif part == fastest_delivery %}
-                        <span style="color: blue">Najszybszy czas dostawy</span>
+                        <span style="color: green">Najtanszy</span> <br>
+                        {% endif %}
+                        {% if part == highest_quality %}
+                        <span style="color: rgb(236, 138, 9)">Najlepiej wykonany</span> <br>
+                        {% endif %}
+                        {% if part == fastest_delivery %}
+                        <span style="color: blue">Najszybszy czas dostawy</span> <br>
+                        {% endif %} 
+                        {% if request.method == 'POST' %}
+                            {% if part == new_best_product %}
+                            <span style="color: purple">Najlepszy produkt</span> <br>
+                            {% endif %}
                         {% else %}
-                        Brak
-                        {% endif %}
-
-                        {% if part == best_product %}
-                        <span style="color: purple">Najlepszy produkt</span>
-                        {% endif %}
+                            {% if part == best_product %}
+                            <span style="color: purple">Najlepszy produkt</span> <br>
+                            {% endif %}
+                        {% endif %}  
                     </strong>
                 </td>
             </tr>
@@ -143,27 +178,26 @@
 <form method="post" class="row justify-content-center">
     {% csrf_token %}
     <label for="quality" class="form-label">Jakość</label>
-    <input type="range" id="price" min="0" max="100" value="50" name="price" class="form-range">
+    <input type="range" id="quality-bar" min="0" max="10" value="5" name="quality" class="form-range">
     <label for="price" class="form-label">Cena</label>
-    <input type="range" id="quality" min="0" max="100" value="50" name="quality" class="form-range">
+    <input type="range" min="0" max="10" value="5" name="price" class="form-range price-bar">
     <label for="time" class="form-label">Czas</label>
-    <input type="range" id="time" min="0" , max="100" , value="50" name="time" class="form-range">
+    <input type="range" min="0" , max="10" , value="5" name="time" class="form-range">
     <input type="submit" class="mt-5 btn btn-success" value="Dokonaj podsumowania">
 </form>
 
-
 <script>
-        'use strict';
-        var price = document.getElementById("price");
-        var quality = document.getElementById("quality");
+    const qualityBar = document.querySelector('#quality-bar');
+    const priceBar = document.querySelector('.price-bar');
 
-        price.addEventListener("input", () => {
-            quality.value = 100 - price.value;
-        })
+    qualityBar.addEventListener('input', function () {
+        priceBar.value = 10 - qualityBar.value;
+    });
 
-        quality.addEventListener("input", () => {
-            price.value = 100 - quality.value
-        })
+    priceBar.addEventListener('input', function () {
+        qualityBar.value = 10 - priceBar.value;
+    });
 </script>
 
 {% endblock %}
+

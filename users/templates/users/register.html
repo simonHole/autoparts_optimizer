@@ -1,8 +1,19 @@
-{% extends 'root.html' %} {% block title %}Panel rejestracji{% endblock %}
-{% load crispy_forms_tags %} {% block content %}
-<form method="post">
+{% extends 'root.html' %}
+
+{% block title %} Formularz {% endblock %}
+
+{% load crispy_forms_tags %} 
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}{{form|crispy}}
+
+    {% if not user.is_authenticated %}
     <p>Posiadsz konto? <a href="{% url 'login' %}">Logowanie</a>!</p>
     <button type="submit" class="btn btn-success">Zarejestruj</button>
+    {% else %}
+    <button type="submit" class="btn btn-success">Edytuj</button>
+    {% endif %}
+
 </form>
 {% endblock %}

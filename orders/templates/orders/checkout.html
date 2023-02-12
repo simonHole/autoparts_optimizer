@@ -1,5 +1,16 @@
-{% extends 'root.htm;' %}
+{% extends 'root.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
 
 {% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form|crispy}}
+
+    <input type="submit" class="btn btn-success" value="Zapłać">
+    <a href="{% url 'cart' %}" class="btn btn-warning">Wróć do koszyka</a>
+</form>
+
+<script src="{% static 'javascript/cart.js' %}"></script>
 
 {% endblock %}

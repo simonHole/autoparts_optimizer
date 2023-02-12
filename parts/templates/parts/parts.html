@@ -101,9 +101,9 @@
                                         Niedostępny
                                     </span>
                                     {% else %}
-                                    <a href="{% url 'add_to_cart' part.id %}" class="btn btn-outline-primary btn-sm mt-2">
+                                    <button data-product="{{part.id}}" data-action="add" class="btn btn-outline-primary btn-sm mt-2 update-cart">
                                         Dodaj do koszyka
-                                    </a>
+                                    </button>
                                     {% endif %}
                                 </div>
                             </div>
@@ -113,21 +113,12 @@
             </div>
         </div>
         {% endfor %}
+    <script src="{% static 'javascript/cart.js' %}"></script>
     </div>
 </section>
 {% else %}
 <h2 class="text-error text-center">Brak dostępnych części</h2>
 <p class="text-error text-center">Części do tego silnka nie są dostępne w systemie. Wybierz inny silnik.</p>
 {% endif %}
-
-
-
-
-<table>
-    
-    <tr>
-        <td><a class="list-position" href="#">{{part}}</a></td>
-    </tr>
-</table>
 {% endblock %}
 

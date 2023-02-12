@@ -117,12 +117,20 @@ class Part(models.Model):
 
         return fastest_time_delivery_part
 
-    def optimal_fac(self, quality=5, price=3.5, time=1.5):
-        return round((quality * self.quality_fac) - (price * self.price) - (time * self.time_of_delivery), 2)
+    def optimal_fac(self, quality=0.5, price=0.35, time=0.15):
 
-    def best_product(parts, quality=5.0, price=3.5, time=1.5):
+        calculate_quality = self.quality_fac * quality
+        calculate_price = self.price * price
+        calculate_time = self.time_of_delivery * time
+
+        optimal = round(
+            (calculate_quality - calculate_price - calculate_time), 2)
+        return optimal
+
+    def best_product(parts, quality=0.5, price=0.35, time=0.15):
         # Analize all parts
-        all_optimals = [part.optimal_fac() for part in parts]
+        all_optimals = [part.optimal_fac(
+            quality, price, time) for part in parts]
 
         best_fac = 0
         best_fac_index = 0

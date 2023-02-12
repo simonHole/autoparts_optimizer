@@ -5,7 +5,9 @@ from django.contrib.auth import logout
 from django.contrib import messages
 
 from django.contrib.auth.models import User
-from .forms import LoginForm, RegisterForm
+from .models import Client
+
+from .forms import LoginForm, RegisterForm, EditClientForm
 
 
 def user_login(request):
@@ -30,7 +32,6 @@ def user_login(request):
 
 
 def user_register(request):
-    page = 'register'
     form = RegisterForm()
 
     if request.method == 'POST':
@@ -49,7 +50,24 @@ def user_register(request):
             messages.success(
                 request, 'Błąd podczas rejestracji.')
 
-    context = {'page': page, 'form': form}
+    context = {'form': form}
+    return render(request, 'users/register.html', context)
+
+
+@login_required(login_url='login')
+def client_edit(request):
+
+    client = Client.objects.get(user=request.user)
+    form = EditClientForm(instance=client)
+
+    if request.method == 'POST':
+        form = EditClientForm(request.POST, request.FILES, instance=client)
+        if form.is_valid():
+            form.save()
+
+            return redirect('user_about')
+
+    context = {'form': form}
     return render(request, 'users/register.html', context)
 
 
@@ -60,9 +78,12 @@ def user_logout(request):
 
 
 def user_about(request):
-    user = User.objects.get(username=request.user.username)
+
+    user = request.user
+    client = Client.objects.get(user=user)
     context = {
-        'user': user
+        'user': user,
+        'client': client
     }
 
     return render(request, 'users/about.html', context)

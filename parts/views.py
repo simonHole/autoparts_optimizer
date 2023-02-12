@@ -58,6 +58,8 @@ def show_parts(request, engine):
 def show_part(request, part):
 
     current_part = Part.objects.filter(id=part)
+    part_with_optimal = []
+    new_best_product = [0]
 
     # If part is original
     if current_part[0].is_original:
@@ -68,20 +70,35 @@ def show_part(request, part):
         fastest = Part.fastest_time_delivery(all)
         best_product = Part.best_product(all)
 
+        # Get new optimal facility
         if request.method == 'POST':
-            quality = request.POST['quality']
-            price = request.POST['price']
-            time = request.POST['time']
-            best_product = Part.best_product(all, quality, price, time)
+            quality = float(request.POST['quality'])
+            price = float(request.POST['price'])
+            time = float(request.POST['time'])
+
+            # Parts with new optimal facility
+            for part in all:
+                part.optimal_fac = part.optimal_fac(
+                    quality * 0.1, price * 0.1, time * 0.1)
+                part_with_optimal.append((part, part.optimal_fac))
+
+            # Get best part
+            new_best_product = part_with_optimal[0]
+
+            for part in part_with_optimal[1::]:
+                if new_best_product[1] < part[1]:
+                    new_best_product = part
 
         context = {
             'current_part': current_part[0],
-            'others': others,
             'all': all,
+            'others': others,
             'cheapest': cheapest,
             'highest_quality': highest,
             'fastest_delivery': fastest,
-            'best_product': best_product
+            'best_product': best_product,
+            'part_with_optimal': part_with_optimal,
+            'new_best_product': new_best_product[0],
         }
 
     # If part is one of substitutes
@@ -95,26 +112,44 @@ def show_part(request, part):
         highest = Part.highetst_quality(all)
         fastest = Part.fastest_time_delivery(all)
         best_product = Part.best_product(all)
+        all_categories = [cheapest, highest, fastest, best_product]
+
+        if request.method == 'POST':
+            quality = float(request.POST['quality'])
+            price = float(request.POST['price'])
+            time = float(request.POST['time'])
+
+            # Parts with new optimal facility
+            for part in all:
+                part.optimal_fac = part.optimal_fac(
+                    quality * 0.1, price * 0.1, time * 0.1)
+                part_with_optimal.append((part, part.optimal_fac))
+
+            # Get best part
+            new_best_product = part_with_optimal[0]
+
+            for part in part_with_optimal[1::]:
+                if new_best_product[1] < part[1]:
+                    new_best_product = part
 
         context = {
             'current_part': current_part[0],
-            'original': original,
             'all': all,
             'others': others,
             'cheapest': cheapest,
             'highest_quality': highest,
             'fastest_delivery': fastest,
-            'best_product': best_product
+            'best_product': best_product,
+            'part_with_optimal': part_with_optimal,
+            'new_best_product': new_best_product[0],
         }
-
-        print(context)
 
     return render(request, 'parts/part.html', context)
 
 # All admin managment views
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def admin_managment(request):
 
     # Check if user is admin
@@ -131,7 +166,7 @@ def admin_managment(request):
     return render(request, 'parts/admin/admin_managment.html', context)
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def delete_part(request, pk):
     if request.user.is_superuser:
         part = Part.objects.get(id=pk)
@@ -148,7 +183,7 @@ def delete_part(request, pk):
     return render(request, 'parts/admin/delete_part.html', context)
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def add_original(request):
     if request.user.is_superuser:
         form = CreatePartForm(initial={
@@ -174,7 +209,7 @@ def add_original(request):
 # Edit original
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def edit_original(request, pk):
     if request.user.is_superuser:
         part = Part.objects.get(
@@ -199,7 +234,7 @@ def edit_original(request, pk):
 # Edit Substitute Form
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def substitute(request, pk):
     if request.user.is_superuser:
         original = Part.objects.get(id=pk)
@@ -214,7 +249,7 @@ def substitute(request, pk):
     return render(request, 'parts/admin/subtitutes.html', context)
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def add_substitute(request, pk):
     if request.user.is_superuser:
         original = Part.objects.get(id=pk)
@@ -241,7 +276,7 @@ def add_substitute(request, pk):
     return render(request, 'parts/admin/add-substitute.html', context)
 
 
-@login_required(login_url='index')
+@ login_required(login_url='index')
 def edit_substitute(request, pk):
     if request.user.is_superuser:
         part = Part.objects.get(
