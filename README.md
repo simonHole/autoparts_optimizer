@@ -34,6 +34,7 @@ Instalacja krok po kroku
 
     UNIX
     * "python3 manage.py runserver 8080"
+    
     Windows
     * "py manage.py runserver
 
